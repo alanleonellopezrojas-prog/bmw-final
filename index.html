@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>BMW ConnectedDrive</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Pantalla de Inicio de Sesión -->
+    <div class="login-container" id="loginContainer">
+        <div class="login-card">
+            <div class="login-logo">
+                <div class="bmw-login-ring">
+                    <i class="fab fa-bmw"></i>
+                </div>
+                <h2>BMW<span>ConnectedDrive</span></h2>
+                <p>Accede a tu vehículo</p>
+            </div>
+            <div class="login-form">
+                <div class="input-group">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="loginEmail" placeholder="correo@ejemplo.com" value="usuario@bmw.com">
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="loginPassword" placeholder="Contraseña" value="123456">
+                </div>
+                <button class="login-btn" onclick="doLogin()">
+                    <i class="fas fa-arrow-right-to-bracket"></i> Iniciar Sesión
+                </button>
+                <p class="login-demo">Demo: cualquier email / cualquier contraseña</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- App Principal (oculta hasta login) -->
+    <div class="app-container" id="appContainer" style="display: none;">
+        <!-- Header BMW -->
+        <header class="bmw-header">
+            <div class="logo-area">
+                <div class="bmw-ring">
+                    <i class="fab fa-bmw"></i>
+                </div>
+                <h1>BMW <span>ConnectedDrive</span></h1>
+            </div>
+            <div class="user-area" onclick="logout()">
+                <i class="fas fa-user-circle"></i>
+                <span>Cerrar sesión</span>
+            </div>
+        </header>
+
+        <!-- Hero del Vehículo -->
+        <div class="vehicle-hero">
+            <div class="car-image">
+                <i class="fas fa-car-side"></i>
+            </div>
+            <div class="car-details">
+                <h2>BMW i7 M70</h2>
+                <p>Electric • 659 HP • AWD</p>
+            </div>
+        </div>
+
+        <!-- Estadísticas Rápidas -->
+        <div class="stats-row">
+            <div class="stat-card">
+                <i class="fas fa-battery-full"></i>
+                <div>
+                    <span class="stat-label">Batería</span>
+                    <span class="stat-value" id="batteryValue">87%</span>
+                    <div class="progress-bar"><div class="progress-fill" id="batteryFill" style="width:87%"></div></div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-road"></i>
+                <div>
+                    <span class="stat-label">Autonomía</span>
+                    <span class="stat-value" id="rangeValue">420 km</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-tachometer-alt"></i>
+                <div>
+                    <span class="stat-label">Kilometraje</span>
+                    <span class="stat-value">12,450 km</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Menú de Pestañas -->
+        <div class="tabs-menu">
+            <button class="tab-btn active" data-tab="clima"><i class="fas fa-temperature-low"></i> Clima</button>
+            <button class="tab-btn" data-tab="accesos"><i class="fas fa-key"></i> Accesos</button>
+            <button class="tab-btn" data-tab="camaras"><i class="fas fa-video"></i> Cámaras</button>
+            <button class="tab-btn" data-tab="monitoreo"><i class="fas fa-chart-line"></i> Monitoreo</button>
+            <button class="tab-btn" data-tab="carga"><i class="fas fa-charging-station"></i> Carga</button>
+            <button class="tab-btn" data-tab="utilidades"><i class="fas fa-cogs"></i> Utilidades</button>
+        </div>
+
+        <!-- Panel Climatización -->
+        <div class="tab-panel active" id="clima">
+            <div class="panel-card">
+                <h3><i class="fas fa-thermometer-half"></i> Temperatura</h3>
+                <div class="temp-controls">
+                    <button class="temp-btn" onclick="changeTemp(-1)">−</button>
+                    <div class="temp-display"><span id="tempValue">22</span>°C</div>
+                    <button class="temp-btn" onclick="changeTemp(1)">+</button>
+                </div>
+                <button class="btn-primary" onclick="toggleClimateWithAnimation()" id="climateBtn">🔘 Encender Clima</button>
+            </div>
+            <div class="panel-card">
+                <h3><i class="fas fa-chair"></i> Asientos y Volante</h3>
+                <div class="button-grid">
+                    <button class="btn-outline" onclick="showNotification('Asientos delanteros calientes 🔥')"><i class="fas fa-tshirt"></i> Asientos Del.</button>
+                    <button class="btn-outline" onclick="showNotification('Asientos traseros calientes 🔥')"><i class="fas fa-users"></i> Asientos Tras.</button>
+                    <button class="btn-outline" onclick="showNotification('Asientos ventilados 💨')"><i class="fas fa-fan"></i> Ventilados</button>
+                    <button class="btn-outline" onclick="showNotification('Volante caliente 🔥')"><i class="fas fa-hand-peace"></i> Volante Caliente</button>
+                    <button class="btn-outline" onclick="showNotification('Descongelando luneta térmica ❄️')"><i class="fas fa-wind"></i> Descongelar</button>
+                    <button class="btn-outline" onclick="showNotification('Modo Perro activado 🐕')"><i class="fas fa-dog"></i> Modo Perro</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel Accesos -->
+        <div class="tab-panel" id="accesos">
+            <div class="panel-card">
+                <h3><i class="fas fa-door-open"></i> Puertas</h3>
+                <div class="button-group">
+                    <button class="btn-primary" onclick="lockDoors()"><i class="fas fa-lock"></i> Cerrar Todo</button>
+                    <button class="btn-secondary" onclick="unlockDoors()"><i class="fas fa-lock-open"></i> Abrir Todo</button>
+                </div>
+                <div class="button-group">
+                    <button class="btn-outline" onclick="showNotification('Cajuela abierta 📦')"><i class="fas fa-trunk-alt"></i> Cajuela</button>
+                    <button class="btn-outline" onclick="showNotification('Frunk (maletero delantero) abierto 📦')"><i class="fas fa-box"></i> Frunk</button>
+                </div>
+            </div>
+            <div class="panel-card">
+                <h3><i class="fas fa-window-maximize"></i> Ventanas</h3>
+                <div class="button-group">
+                    <button class="btn-outline" onclick="windowsUp()"><i class="fas fa-arrow-up"></i> Subir Todo</button>
+                    <button class="btn-outline" onclick="windowsDown()"><i class="fas fa-arrow-down"></i> Bajar Todo</button>
+                </div>
+            </div>
+            <div class="panel-card">
+                <h3><i class="fas fa-location-dot"></i> Localizar Vehículo</h3>
+                <div class="button-group">
+                    <button class="btn-outline" onclick="showNotification('Luces encendidas 💡 Busca tu auto')"><i class="fas fa-lightbulb"></i> Encender Luces</button>
+                    <button class="btn-outline" onclick="showNotification('Bocina activada 📢 ¡Aquí estoy!')"><i class="fas fa-bullhorn"></i> Activar Bocina</button>
+                    <button class="btn-outline" onclick="findMyCar()"><i class="fas fa-location-arrow"></i> Encontrar Auto</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel Cámaras en Tiempo Real -->
+        <div class="tab-panel" id="camaras">
+            <div class="panel-card">
+                <h3><i class="fas fa-video"></i> Cámaras 360°</h3>
+                <p class="camara-subtitle">Vista en vivo de tu vehículo</p>
+                <div class="camaras-grid">
+                    <div class="camara-card" onclick="showNotification('Cámara Delantera activada')">
+                        <div class="camara-preview" id="camFront">
+                            <i class="fas fa-video"></i>
+                            <span>Frontal</span>
+                        </div>
+                    </div>
+                    <div class="camara-card" onclick="showNotification('Cámara Trasera activada')">
+                        <div class="camara-preview" id="camRear">
+                            <i class="fas fa-video"></i>
+                            <span>Trasera</span>
+                        </div>
+                    </div>
+                    <div class="camara-card" onclick="showNotification('Cámara Izquierda activada')">
+                        <div class="camara-preview" id="camLeft">
+                            <i class="fas fa-video"></i>
+                            <span>Izquierda</span>
+                        </div>
+                    </div>
+                    <div class="camara-card" onclick="showNotification('Cámara Derecha activada')">
+                        <div class="camara-preview" id="camRight">
+                            <i class="fas fa-video"></i>
+                            <span>Derecha</span>
+                        </div>
+                    </div>
+                    <div class="camara-card full-width" onclick="showNotification('Vista 360° activada')">
+                        <div class="camara-preview" id="cam360">
+                            <i class="fas fa-satellite-dish"></i>
+                            <span>Vista 360°</span>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn-primary" onclick="refreshCameras()">
+                    <i class="fas fa-sync-alt"></i> Actualizar cámaras
+                </button>
+            </div>
+        </div>
+
+        <!-- Panel Monitoreo -->
+        <div class="tab-panel" id="monitoreo">
+            <div class="panel-card">
+                <h3><i class="fas fa-map-marked-alt"></i> Ubicación GPS</h3>
+                <div class="gps-box">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <p id="locationText">Av. Siempre Viva 742, Zona Norte</p>
+                    <button class="btn-small" onclick="updateLocation()"><i class="fas fa-sync-alt"></i> Actualizar</button>
+                </div>
+            </div>
+            <div class="panel-card">
+                <h3><i class="fas fa-info-circle"></i> Estado del Vehículo</h3>
+                <div class="status-list">
+                    <div class="status-item"><span><i class="fas fa-car"></i> Puertas:</span><span id="doorStatus">🔒 Cerradas</span></div>
+                    <div class="status-item"><span><i class="fas fa-window-maximize"></i> Ventanas:</span><span id="windowStatus">⬆️ Cerradas</span></div>
+                    <div class="status-item"><span><i class="fas fa-circle"></i> Neumáticos:</span><span id="tirePressure">2.4 bar</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel Carga -->
+        <div class="tab-panel" id="carga">
+            <div class="panel-card">
+                <h3><i class="fas fa-charging-station"></i> Control de Carga</h3>
+                <div class="charging-status" id="chargingStatus">
+                    <i class="fas fa-plug"></i>
+                    <div>
+                        <h4 id="chargingText">Desconectado</h4>
+                        <p>Batería: <span id="batteryValue2">87%</span></p>
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button class="btn-primary" onclick="startCharging()"><i class="fas fa-play"></i> Iniciar Carga</button>
+                    <button class="btn-secondary" onclick="stopCharging()"><i class="fas fa-stop"></i> Detener</button>
+                </div>
+                <div class="slider-group">
+                    <label><i class="fas fa-percent"></i> Límite de carga: <span id="limitValue">80</span>%</label>
+                    <input type="range" id="chargeLimit" min="50" max="100" value="80">
+                </div>
+                <button class="btn-outline" onclick="showNotification('Carga programada para las 2:00 AM 📅')"><i class="fas fa-calendar-alt"></i> Programar carga</button>
+            </div>
+        </div>
+
+        <!-- Panel Utilidades -->
+        <div class="tab-panel" id="utilidades">
+            <div class="panel-card">
+                <h3><i class="fas fa-fence"></i> Geocercas</h3>
+                <button class="btn-primary" onclick="showNotification('Geocerca creada 🗺️ Te avisaré si el auto sale del área')"><i class="fas fa-draw-polygon"></i> Crear Geocerca</button>
+            </div>
+            <div class="panel-card">
+                <h3><i class="fas fa-history"></i> Historial de Viajes</h3>
+                <div class="trip-list">
+                    <div class="trip-item"><span>🏠 Casa → 🏢 Trabajo</span><span>15 km | 25 min</span></div>
+                    <div class="trip-item"><span>🏢 Trabajo → 🛒 Supermercado</span><span>8 km | 12 min</span></div>
+                    <div class="trip-item"><span>🛒 Supermercado → 🏠 Casa</span><span>10 km | 18 min</span></div>
+                </div>
+            </div>
+            <div class="panel-card">
+                <h3><i class="fas fa-share-alt"></i> Compartir Acceso</h3>
+                <button class="btn-outline" onclick="showNotification('Acceso temporal compartido por 1 hora 👥')"><i class="fas fa-user-friends"></i> Compartir con familiar</button>
+            </div>
+            <div class="panel-card">
+                <h3><i class="fas fa-download"></i> Actualizaciones</h3>
+                <button class="btn-outline" onclick="showNotification('Buscando actualizaciones... Versión actual: 2025.04 ✅')"><i class="fas fa-sync-alt"></i> Buscar actualizaciones</button>
+            </div>
+        </div>
+
+        <!-- Animación del Clima (Overlay) -->
+        <div class="climate-animation-overlay" id="climateAnimation">
+            <div class="climate-animation-content">
+                <div class="snowflakes" id="snowEffect"></div>
+                <div class="heat-waves" id="heatEffect"></div>
+                <div class="climate-status-text" id="climateStatusText">Encendiendo clima...</div>
+            </div>
+        </div>
+
+        <!-- Notificación Toast -->
+        <div class="toast-notification" id="toast"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
